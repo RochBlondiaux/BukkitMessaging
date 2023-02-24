@@ -58,5 +58,18 @@
     <modules>
         <module>api</module>
         <module>bukkit</module>
+        <module>bungeecord</module>
     </modules>
+
+    <!-- deployment -->
+    <distributionManagement>
+        <snapshotRepository>
+            <id>playerpoof-snapshots</id>
+            <url>https://maven.playerpoof.com/repository/maven-snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>playerpoof-releases</id>
+            <url>https://maven.playerpoof.com/repository/maven-releases/</url>
+        </repository>
+    </distributionManagement>
 </project>
