@@ -59,6 +59,7 @@
         <module>api</module>
         <module>bukkit</module>
         <module>bungeecord</module>
+        <module>velocity</module>
     </modules>
 
     <!-- deployment -->

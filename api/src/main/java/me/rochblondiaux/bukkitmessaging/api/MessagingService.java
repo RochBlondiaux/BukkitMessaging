@@ -40,7 +40,7 @@ public abstract class MessagingService {
         this.adapter().publish(this.pipeline.write(message));
     }
 
-    public void register(@NotNull Class<? extends BukkitMessage> messageClass, @NotNull BukkitMessageListener<?> listener) {
+    public <T extends BukkitMessage> void register(@NotNull Class<T> messageClass, @NotNull BukkitMessageListener<T> listener) {
         this.listeners.computeIfAbsent(messageClass, k -> new ArrayList<>()).add(listener);
     }
 
