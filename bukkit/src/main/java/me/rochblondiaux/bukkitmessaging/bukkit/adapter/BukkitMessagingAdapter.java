@@ -28,7 +28,7 @@ public class BukkitMessagingAdapter implements MessagingAdapter {
     public BukkitMessagingAdapter(BukkitMessagingService service) {
         this.service = service;
         this.listener = new ProxyListener(this);
-        this.proxied = Bukkit.getServer().spigot().getConfig().getConfigurationSection("settings").getBoolean("settings.bungeecord");
+        this.proxied = Bukkit.getServer().spigot().getConfig().getBoolean("settings.bungeecord", false);
     }
 
 
@@ -52,15 +52,17 @@ public class BukkitMessagingAdapter implements MessagingAdapter {
 
     @Override
     public void publish(String message) {
-        if (!this.proxied) return;
+        if (!this.proxied) {
+            return;
+        }
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(stream);
 
         try {
-            out.writeUTF("Subchannel");
             out.writeUTF(SUB_CHANNEL);
             out.writeUTF(message);
+
             Bukkit.getServer().sendPluginMessage(this.service.plugin(), "BungeeCord", stream.toByteArray());
         } catch (IOException ex) {
             service.plugin().getLogger().severe("An error occurred when attempting to communicate with the proxy! Code: M-0001");

@@ -5,6 +5,7 @@ import me.rochblondiaux.bukkitmessaging.api.adapter.MessagingAdapter;
 import me.rochblondiaux.bukkitmessaging.api.redis.RedisCredentials;
 import me.rochblondiaux.bukkitmessaging.api.redis.RedisMessagingAdapter;
 import me.rochblondiaux.bukkitmessaging.bukkit.adapter.BukkitMessagingAdapter;
+import me.rochblondiaux.bukkitmessaging.bukkit.listener.ProxyListener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,6 +29,8 @@ public class BukkitMessagingService extends MessagingService {
 
     public void load() {
         this.adapter().init(this.credentials);
+        this.plugin.getServer().getMessenger().registerIncomingPluginChannel(this.plugin, "BungeeCord", new ProxyListener((BukkitMessagingAdapter) adapter));
+        this.plugin.getServer().getMessenger().registerOutgoingPluginChannel(this.plugin, "BungeeCord");
     }
 
     public void unload() {

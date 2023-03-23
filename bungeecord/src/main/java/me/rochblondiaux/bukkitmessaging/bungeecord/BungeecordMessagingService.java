@@ -5,6 +5,7 @@ import me.rochblondiaux.bukkitmessaging.api.adapter.MessagingAdapter;
 import me.rochblondiaux.bukkitmessaging.api.redis.RedisCredentials;
 import me.rochblondiaux.bukkitmessaging.api.redis.RedisMessagingAdapter;
 import me.rochblondiaux.bukkitmessaging.bungeecord.adapter.BungeecordMessagingAdapter;
+import me.rochblondiaux.bukkitmessaging.bungeecord.listener.MessageListener;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,18 +22,23 @@ public class BungeecordMessagingService extends MessagingService {
 
     private final Plugin plugin;
     private final MessagingAdapter adapter;
+    private MessageListener listener;
+
     public BungeecordMessagingService(Plugin plugin, @NotNull Type type, @Nullable RedisCredentials credentials) {
         super(type, credentials);
         this.plugin = plugin;
         this.adapter = this.type == Type.PROXY ? new BungeecordMessagingAdapter(this) : new RedisMessagingAdapter(this);
+        this.plugin.getProxy().registerChannel(SUB_CHANNEL);
     }
 
     public void load() {
         this.adapter().init(this.credentials);
+        this.plugin.getProxy().getPluginManager().registerListener(plugin, listener = new MessageListener(this));
     }
 
     public void unload() {
         this.adapter().unload();
+        this.plugin.getProxy().getPluginManager().unregisterListener(listener);
     }
 
     @Override

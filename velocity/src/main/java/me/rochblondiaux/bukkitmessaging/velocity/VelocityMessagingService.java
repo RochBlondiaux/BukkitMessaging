@@ -7,6 +7,7 @@ import me.rochblondiaux.bukkitmessaging.api.adapter.MessagingAdapter;
 import me.rochblondiaux.bukkitmessaging.api.redis.RedisCredentials;
 import me.rochblondiaux.bukkitmessaging.api.redis.RedisMessagingAdapter;
 import me.rochblondiaux.bukkitmessaging.velocity.adapter.VelocityMessagingAdapter;
+import me.rochblondiaux.bukkitmessaging.velocity.listener.MessageListener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,6 +24,7 @@ public class VelocityMessagingService extends MessagingService {
     private final Object plugin;
     private final ProxyServer server;
     private final MessagingAdapter adapter;
+    private MessageListener listener;
 
     public VelocityMessagingService(Object plugin, @NotNull ProxyServer server, @NotNull Type type, @Nullable RedisCredentials credentials) {
         super(type, credentials);
@@ -38,10 +40,13 @@ public class VelocityMessagingService extends MessagingService {
 
     public void load() {
         this.adapter().init(this.credentials);
+        this.server.getChannelRegistrar().register(CHANNEL);
+        this.server.getEventManager().register(plugin, listener = new MessageListener(this));
     }
 
     public void unload() {
         this.adapter().unload();
+        this.server.getChannelRegistrar().unregister(CHANNEL);
     }
 
     public ProxyServer server() {

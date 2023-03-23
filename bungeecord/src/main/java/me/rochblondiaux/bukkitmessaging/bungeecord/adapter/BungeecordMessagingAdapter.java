@@ -46,7 +46,6 @@ public class BungeecordMessagingAdapter implements MessagingAdapter {
         DataOutputStream out = new DataOutputStream(stream);
 
         try {
-            out.writeUTF("Subchannel");
             out.writeUTF(BungeecordMessagingService.SUB_CHANNEL);
             out.writeUTF(message);
             ProxyServer.getInstance().getServers().values().forEach(server -> server.sendData("BungeeCord", stream.toByteArray()));
