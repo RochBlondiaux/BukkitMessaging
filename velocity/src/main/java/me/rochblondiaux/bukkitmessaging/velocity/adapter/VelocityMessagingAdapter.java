@@ -43,7 +43,6 @@ public class VelocityMessagingAdapter implements MessagingAdapter {
     public void publish(String message) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(stream);
-
         try {
             out.writeUTF(Constants.SUB_CHANNEL);
             out.writeUTF(message);

@@ -1,7 +1,7 @@
 package me.rochblondiaux.bukkitmessaging.velocity;
 
 import com.velocitypowered.api.proxy.ProxyServer;
-import com.velocitypowered.api.proxy.messages.ChannelIdentifier;
+import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import me.rochblondiaux.bukkitmessaging.api.Constants;
 import me.rochblondiaux.bukkitmessaging.api.MessagingService;
 import me.rochblondiaux.bukkitmessaging.api.adapter.MessagingAdapter;
@@ -19,8 +19,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Roch Blondiaux (Kiwix).
  */
 public class VelocityMessagingService extends MessagingService {
-
-    public static final ChannelIdentifier CHANNEL = () -> Constants.CHANNEL;
+    public static final MinecraftChannelIdentifier CHANNEL = MinecraftChannelIdentifier.from(Constants.CHANNEL);
 
     private final Object plugin;
     private final ProxyServer server;
@@ -40,8 +39,8 @@ public class VelocityMessagingService extends MessagingService {
     }
 
     public void load() {
-        this.adapter().init(this.credentials);
         this.server.getChannelRegistrar().register(CHANNEL);
+        this.adapter().init(this.credentials);
         this.server.getEventManager().register(plugin, listener = new MessageListener(this));
     }
 

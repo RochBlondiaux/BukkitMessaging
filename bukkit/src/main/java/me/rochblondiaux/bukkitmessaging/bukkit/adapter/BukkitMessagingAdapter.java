@@ -36,12 +36,8 @@ public class BukkitMessagingAdapter implements MessagingAdapter {
         if (this.service.proxyType().equals(ProxyType.NONE)) return;
 
         // Register BungeeCord the channel
-        if (this.service.proxyType().equals(ProxyType.BUNGEECORD)) {
-            Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(service.plugin(), Constants.CHANNEL);
-            Bukkit.getServer().getMessenger().registerIncomingPluginChannel(service.plugin(), Constants.CHANNEL, this.listener);
-        } else {
-
-        }
+        Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(service.plugin(), Constants.CHANNEL);
+        Bukkit.getServer().getMessenger().registerIncomingPluginChannel(service.plugin(), Constants.CHANNEL, this.listener);
     }
 
     @Override
@@ -50,12 +46,8 @@ public class BukkitMessagingAdapter implements MessagingAdapter {
 
 
         // Unregister the channel
-        if (this.service.proxyType().equals(ProxyType.BUNGEECORD)) {
-            Bukkit.getServer().getMessenger().unregisterOutgoingPluginChannel(service.plugin());
-            Bukkit.getServer().getMessenger().unregisterIncomingPluginChannel(service.plugin());
-        } else {
-
-        }
+        Bukkit.getServer().getMessenger().unregisterOutgoingPluginChannel(service.plugin());
+        Bukkit.getServer().getMessenger().unregisterIncomingPluginChannel(service.plugin());
     }
 
     @Override

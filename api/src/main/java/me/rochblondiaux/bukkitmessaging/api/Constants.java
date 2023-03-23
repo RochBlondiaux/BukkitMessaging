@@ -8,6 +8,6 @@ package me.rochblondiaux.bukkitmessaging.api;
  */
 public class Constants {
 
-    public static final String CHANNEL = "bukkitmessaging";
+    public static final String CHANNEL = "playerpoof:main";
     public static final String SUB_CHANNEL = "playerpoof";
 }
