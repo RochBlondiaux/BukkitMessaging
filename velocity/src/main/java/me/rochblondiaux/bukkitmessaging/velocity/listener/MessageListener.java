@@ -3,6 +3,7 @@ package me.rochblondiaux.bukkitmessaging.velocity.listener;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.PluginMessageEvent;
 import lombok.RequiredArgsConstructor;
+import me.rochblondiaux.bukkitmessaging.api.Constants;
 import me.rochblondiaux.bukkitmessaging.velocity.VelocityMessagingService;
 
 import java.io.ByteArrayInputStream;
@@ -27,10 +28,13 @@ public class MessageListener {
         ByteArrayInputStream stream = new ByteArrayInputStream(e.getData());
         DataInputStream in = new DataInputStream(stream);
         try {
+            String subChannel = in.readUTF();
+            if (!subChannel.equalsIgnoreCase(Constants.SUB_CHANNEL))
+                return;
             String data = in.readUTF();
             service.pipeline().read(data);
         } catch (IOException ex) {
-            //service.server().(Level.SEVERE, "Unable to decode bukkit server message! Code: L-0001", ex);
+            ex.printStackTrace();
         }
     }
 

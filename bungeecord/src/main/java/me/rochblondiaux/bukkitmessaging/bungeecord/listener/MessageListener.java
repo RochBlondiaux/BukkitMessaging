@@ -1,6 +1,7 @@
 package me.rochblondiaux.bukkitmessaging.bungeecord.listener;
 
 import lombok.RequiredArgsConstructor;
+import me.rochblondiaux.bukkitmessaging.api.Constants;
 import me.rochblondiaux.bukkitmessaging.bungeecord.BungeecordMessagingService;
 import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -24,16 +25,14 @@ public class MessageListener implements Listener {
 
     @EventHandler
     public void on(PluginMessageEvent e) {
-        if (!e.getTag().equalsIgnoreCase("BungeeCord"))
+        if (!e.getTag().equalsIgnoreCase(Constants.CHANNEL))
             return;
         ByteArrayInputStream stream = new ByteArrayInputStream(e.getData());
         DataInputStream in = new DataInputStream(stream);
         try {
             String subChannel = in.readUTF();
-            if (!subChannel.equalsIgnoreCase(BungeecordMessagingService.SUB_CHANNEL)) {
-                service.plugin().getLogger().warning("Received message on wrong subchannel! Expected: " + BungeecordMessagingService.SUB_CHANNEL + " Received: " + subChannel);
+            if (!subChannel.equalsIgnoreCase(Constants.SUB_CHANNEL))
                 return;
-            }
             String data = in.readUTF();
             service.pipeline().read(data);
         } catch (IOException ex) {

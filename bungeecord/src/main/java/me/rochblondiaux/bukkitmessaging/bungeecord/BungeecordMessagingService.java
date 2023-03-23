@@ -1,5 +1,6 @@
 package me.rochblondiaux.bukkitmessaging.bungeecord;
 
+import me.rochblondiaux.bukkitmessaging.api.Constants;
 import me.rochblondiaux.bukkitmessaging.api.MessagingService;
 import me.rochblondiaux.bukkitmessaging.api.adapter.MessagingAdapter;
 import me.rochblondiaux.bukkitmessaging.api.redis.RedisCredentials;
@@ -18,8 +19,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public class BungeecordMessagingService extends MessagingService {
 
-    public static final String SUB_CHANNEL = "playerpoof";
-
     private final Plugin plugin;
     private final MessagingAdapter adapter;
     private MessageListener listener;
@@ -28,7 +27,7 @@ public class BungeecordMessagingService extends MessagingService {
         super(type, credentials);
         this.plugin = plugin;
         this.adapter = this.type == Type.PROXY ? new BungeecordMessagingAdapter(this) : new RedisMessagingAdapter(this);
-        this.plugin.getProxy().registerChannel(SUB_CHANNEL);
+        this.plugin.getProxy().registerChannel(Constants.SUB_CHANNEL);
     }
 
     public void load() {

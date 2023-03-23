@@ -3,6 +3,7 @@ package me.rochblondiaux.bukkitmessaging.bukkit.listener;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import lombok.RequiredArgsConstructor;
+import me.rochblondiaux.bukkitmessaging.api.Constants;
 import me.rochblondiaux.bukkitmessaging.bukkit.adapter.BukkitMessagingAdapter;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
@@ -25,14 +26,14 @@ public class ProxyListener implements PluginMessageListener {
 
     @Override
     public void onPluginMessageReceived(@NotNull String channel, @NotNull Player player, byte @NotNull [] message) {
-        if (!channel.equals("BungeeCord"))
+        if (!channel.equals(Constants.CHANNEL))
             return;
         ByteArrayInputStream stream = new ByteArrayInputStream(message);
         DataInputStream in = new DataInputStream(stream);
 
         try {
             String subchannel = in.readUTF();
-            if (!subchannel.equals(BukkitMessagingAdapter.SUB_CHANNEL))
+            if (!subchannel.equals(Constants.SUB_CHANNEL))
                 return;
             String data = in.readUTF();
             adapter.service().pipeline().read(data);

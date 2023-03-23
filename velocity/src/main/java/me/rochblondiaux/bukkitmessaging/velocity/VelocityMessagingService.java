@@ -2,6 +2,7 @@ package me.rochblondiaux.bukkitmessaging.velocity;
 
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.ChannelIdentifier;
+import me.rochblondiaux.bukkitmessaging.api.Constants;
 import me.rochblondiaux.bukkitmessaging.api.MessagingService;
 import me.rochblondiaux.bukkitmessaging.api.adapter.MessagingAdapter;
 import me.rochblondiaux.bukkitmessaging.api.redis.RedisCredentials;
@@ -19,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class VelocityMessagingService extends MessagingService {
 
-    public static final ChannelIdentifier CHANNEL = () -> "playerpoof";
+    public static final ChannelIdentifier CHANNEL = () -> Constants.CHANNEL;
 
     private final Object plugin;
     private final ProxyServer server;
@@ -46,6 +47,7 @@ public class VelocityMessagingService extends MessagingService {
 
     public void unload() {
         this.adapter().unload();
+        this.server.getEventManager().unregisterListener(plugin, listener);
         this.server.getChannelRegistrar().unregister(CHANNEL);
     }
 

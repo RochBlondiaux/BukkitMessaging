@@ -1,5 +1,6 @@
 package me.rochblondiaux.bukkitmessaging.velocity.adapter;
 
+import me.rochblondiaux.bukkitmessaging.api.Constants;
 import me.rochblondiaux.bukkitmessaging.api.adapter.MessagingAdapter;
 import me.rochblondiaux.bukkitmessaging.api.redis.RedisCredentials;
 import me.rochblondiaux.bukkitmessaging.velocity.VelocityMessagingService;
@@ -44,11 +45,11 @@ public class VelocityMessagingAdapter implements MessagingAdapter {
         DataOutputStream out = new DataOutputStream(stream);
 
         try {
+            out.writeUTF(Constants.SUB_CHANNEL);
             out.writeUTF(message);
-
             service.server().getAllServers().forEach(s -> s.sendPluginMessage(VelocityMessagingService.CHANNEL, stream.toByteArray()));
         } catch (IOException ex) {
-            //service.plugin().getLogger().severe("An error occurred when attempting to communicate with proxied server! Code: M-0001");
+            ex.printStackTrace();
         }
     }
 }
