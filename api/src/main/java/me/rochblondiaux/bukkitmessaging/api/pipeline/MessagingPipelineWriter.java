@@ -17,12 +17,14 @@ import org.jetbrains.annotations.NotNull;
 public class MessagingPipelineWriter {
 
     private final MessagingService service;
+    private static final JsonParser parser = new JsonParser();
 
     public String write(@NotNull BukkitMessage message) {
         final JsonObject label = new JsonObject();
         label.addProperty("class", message.getClass().getName());
-        label.add("sender", JsonParser.parseString(this.service.getUniqueId().toString()));
-        label.add("content", JsonParser.parseString(message.toJson()));
+        label.add("senderId", parser.parse(this.service.getUniqueId().toString()));
+        label.add("senderName", parser.parse(this.service.name()));
+        label.add("content", parser.parse(message.toJson()));
         return label.toString();
     }
 }

@@ -72,6 +72,8 @@ public class RedisMessagingAdapter implements MessagingAdapter {
 
     @Override
     public void publish(String message) {
+        if (!this.thread.isAlive())
+            return;
         if (this.pool.isClosed())
             throw new RuntimeException("Failed to connect to redis server");
 

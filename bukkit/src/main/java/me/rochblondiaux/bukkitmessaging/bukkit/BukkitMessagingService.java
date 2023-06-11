@@ -26,8 +26,8 @@ public class BukkitMessagingService extends MessagingService {
     private final MessagingAdapter adapter;
     private final ProxyType proxyType;
 
-    public BukkitMessagingService(@NotNull JavaPlugin plugin, @NotNull Type type, @Nullable RedisCredentials credentials) {
-        super(type, credentials);
+    public BukkitMessagingService(@NotNull JavaPlugin plugin, @NotNull String name, @NotNull Type type, @Nullable RedisCredentials credentials) {
+        super(name, type, credentials);
         this.plugin = plugin;
         this.adapter = this.type.equals(Type.PROXY) ? new BukkitMessagingAdapter(this) : new RedisMessagingAdapter(this);
         this.proxyType = this.detectProxyType();
@@ -69,8 +69,7 @@ public class BukkitMessagingService extends MessagingService {
     static {
         try {
             PAPER_CONFIGURATION_METHOD = Server.Spigot.class.getMethod("getPaperConfig");
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+        } catch (NoSuchMethodException ignored) {
         }
     }
 

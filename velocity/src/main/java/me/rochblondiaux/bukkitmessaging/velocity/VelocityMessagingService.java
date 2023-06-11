@@ -2,15 +2,20 @@ package me.rochblondiaux.bukkitmessaging.velocity;
 
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
 import me.rochblondiaux.bukkitmessaging.api.Constants;
 import me.rochblondiaux.bukkitmessaging.api.MessagingService;
 import me.rochblondiaux.bukkitmessaging.api.adapter.MessagingAdapter;
+import me.rochblondiaux.bukkitmessaging.api.message.BukkitMessage;
 import me.rochblondiaux.bukkitmessaging.api.redis.RedisCredentials;
 import me.rochblondiaux.bukkitmessaging.api.redis.RedisMessagingAdapter;
 import me.rochblondiaux.bukkitmessaging.velocity.adapter.VelocityMessagingAdapter;
 import me.rochblondiaux.bukkitmessaging.velocity.listener.MessageListener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * BukkitMessaging
@@ -25,9 +30,10 @@ public class VelocityMessagingService extends MessagingService {
     private final ProxyServer server;
     private final MessagingAdapter adapter;
     private MessageListener listener;
+    private final Queue<CachedMessage> cachedMessages = new ConcurrentLinkedQueue<>();
 
     public VelocityMessagingService(Object plugin, @NotNull ProxyServer server, @NotNull Type type, @Nullable RedisCredentials credentials) {
-        super(type, credentials);
+        super("velocity-proxy", type, credentials);
         this.plugin = plugin;
         this.server = server;
         this.adapter = this.type == Type.PROXY ? new VelocityMessagingAdapter(this) : new RedisMessagingAdapter(this);
@@ -56,5 +62,17 @@ public class VelocityMessagingService extends MessagingService {
 
     public Object plugin() {
         return plugin;
+    }
+
+    public void cacheMessage(RegisteredServer server, String payload) {
+        cachedMessages.add(new CachedMessage(server.getServerInfo().getName(), payload));
+    }
+
+    public boolean isCached(RegisteredServer server, String payload) {
+        return cachedMessages.stream().anyMatch(message -> message.getPayload().equals(payload) && message.getServerName().equals(server.getServerInfo().getName()));
+    }
+
+    public Queue<CachedMessage> cachedMessages() {
+        return cachedMessages;
     }
 }

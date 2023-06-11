@@ -1,5 +1,6 @@
 package me.rochblondiaux.bukkitmessaging.velocity.adapter;
 
+import com.velocitypowered.api.proxy.ProxyServer;
 import me.rochblondiaux.bukkitmessaging.api.Constants;
 import me.rochblondiaux.bukkitmessaging.api.adapter.MessagingAdapter;
 import me.rochblondiaux.bukkitmessaging.api.redis.RedisCredentials;
@@ -46,9 +47,31 @@ public class VelocityMessagingAdapter implements MessagingAdapter {
         try {
             out.writeUTF(Constants.SUB_CHANNEL);
             out.writeUTF(message);
-            service.server().getAllServers().forEach(s -> s.sendPluginMessage(VelocityMessagingService.CHANNEL, stream.toByteArray()));
+
+            service.server()
+                    .getAllServers()
+                    .stream()
+                    .filter(server -> !server.sendPluginMessage(VelocityMessagingService.CHANNEL, stream.toByteArray()))
+                    .filter(server -> !this.service.isCached(server, message))
+                    .forEach(s -> this.service.cacheMessage(s, message));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    public void publish(String name, String payload) {
+        service.server()
+                .getServer(name)
+                .ifPresent(server -> {
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    DataOutputStream out = new DataOutputStream(stream);
+                    try {
+                        out.writeUTF(Constants.SUB_CHANNEL);
+                        out.writeUTF(payload);
+                        server.sendPluginMessage(VelocityMessagingService.CHANNEL, stream.toByteArray());
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                });
     }
 }

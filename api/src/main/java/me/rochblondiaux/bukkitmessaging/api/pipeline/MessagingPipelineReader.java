@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import lombok.RequiredArgsConstructor;
 import me.rochblondiaux.bukkitmessaging.api.MessagingService;
+import me.rochblondiaux.bukkitmessaging.api.ServerIdentifier;
 import me.rochblondiaux.bukkitmessaging.api.message.BukkitMessage;
 
 import java.util.ArrayList;
@@ -21,21 +22,24 @@ import java.util.UUID;
 public class MessagingPipelineReader {
 
     private static final Gson GSON = new Gson();
+    private static final JsonParser parser = new JsonParser();
     private final MessagingService service;
 
     public void read(String message) {
         try {
             final JsonObject label;
             try {
-                label = (JsonObject) JsonParser.parseString(message);
+                label = (JsonObject) parser.parse(message);
             } catch (JsonSyntaxException ignored) {
                 return;
             }
 
             final String clazz = label.get("class").getAsString();
-            final UUID sender = UUID.fromString(label.get("sender").getAsString());
+            final UUID senderId = UUID.fromString(label.get("senderId").getAsString());
+            final String senderName = label.get("senderName").getAsString();
+            final ServerIdentifier sender = new ServerIdentifier(senderId, senderName);
 
-            if (this.service.getUniqueId().equals(sender))
+            if (this.service.getUniqueId().equals(senderId))
                 return;
 
             final Class<? extends BukkitMessage> messageClass = (Class<? extends BukkitMessage>) Class.forName(clazz);

@@ -1,5 +1,6 @@
 package me.rochblondiaux.bukkitmessaging.api.message;
 
+import me.rochblondiaux.bukkitmessaging.api.ServerIdentifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -13,7 +14,7 @@ import java.util.UUID;
 @FunctionalInterface
 public interface BukkitMessageListener<M extends BukkitMessage> {
 
-    void onMessage(@NotNull UUID sender, @NotNull M message);
+    void onMessage(@NotNull ServerIdentifier senderId, @NotNull M message);
 
 
 }

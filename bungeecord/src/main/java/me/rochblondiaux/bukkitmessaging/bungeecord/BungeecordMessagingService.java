@@ -24,7 +24,7 @@ public class BungeecordMessagingService extends MessagingService {
     private MessageListener listener;
 
     public BungeecordMessagingService(Plugin plugin, @NotNull Type type, @Nullable RedisCredentials credentials) {
-        super(type, credentials);
+        super("bungeecord-proxy", type, credentials);
         this.plugin = plugin;
         this.adapter = this.type == Type.PROXY ? new BungeecordMessagingAdapter(this) : new RedisMessagingAdapter(this);
         this.plugin.getProxy().registerChannel(Constants.SUB_CHANNEL);

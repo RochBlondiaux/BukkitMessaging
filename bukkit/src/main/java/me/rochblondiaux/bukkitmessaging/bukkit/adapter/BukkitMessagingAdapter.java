@@ -44,7 +44,6 @@ public class BukkitMessagingAdapter implements MessagingAdapter {
     public void unload() {
         if (this.service.proxyType().equals(ProxyType.NONE)) return;
 
-
         // Unregister the channel
         Bukkit.getServer().getMessenger().unregisterOutgoingPluginChannel(service.plugin());
         Bukkit.getServer().getMessenger().unregisterIncomingPluginChannel(service.plugin());
@@ -52,7 +51,8 @@ public class BukkitMessagingAdapter implements MessagingAdapter {
 
     @Override
     public void publish(String message) {
-        if (this.service.proxyType().equals(ProxyType.NONE)) return;
+        if (this.service.proxyType().equals(ProxyType.NONE)
+                || !this.service.plugin().isEnabled()) return;
 
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();

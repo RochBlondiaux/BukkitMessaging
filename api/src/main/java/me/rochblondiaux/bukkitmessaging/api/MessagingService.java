@@ -18,14 +18,14 @@ import java.util.*;
  */
 public abstract class MessagingService {
 
-    protected final UUID uniqueId;
+    protected final ServerIdentifier identifier;
     protected final Type type;
     protected final RedisCredentials credentials;
     protected final Map<Class<? extends BukkitMessage>, List<BukkitMessageListener>> listeners;
     protected final MessagingPipeline pipeline;
 
-    public MessagingService(@NotNull Type type, @Nullable RedisCredentials credentials) {
-        this.uniqueId = UUID.randomUUID();
+    public MessagingService(@NotNull String name, @NotNull Type type, @Nullable RedisCredentials credentials) {
+        this.identifier = new ServerIdentifier(UUID.randomUUID(), name);
         this.type = type;
         this.credentials = credentials;
         this.pipeline = new MessagingPipeline(this);
@@ -33,7 +33,15 @@ public abstract class MessagingService {
     }
 
     public UUID getUniqueId() {
-        return this.uniqueId;
+        return this.identifier.uniqueId();
+    }
+
+    public String name() {
+        return this.identifier.name();
+    }
+
+    public ServerIdentifier identifier() {
+        return this.identifier;
     }
 
     public void publish(@NotNull BukkitMessage message) {
