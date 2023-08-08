@@ -1,21 +1,21 @@
 package me.rochblondiaux.bukkitmessaging.velocity;
 
-import com.velocitypowered.api.proxy.ProxyServer;
-import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
-import com.velocitypowered.api.proxy.server.RegisteredServer;
-import me.rochblondiaux.bukkitmessaging.api.Constants;
-import me.rochblondiaux.bukkitmessaging.api.MessagingService;
-import me.rochblondiaux.bukkitmessaging.api.adapter.MessagingAdapter;
-import me.rochblondiaux.bukkitmessaging.api.message.BukkitMessage;
-import me.rochblondiaux.bukkitmessaging.api.redis.RedisCredentials;
-import me.rochblondiaux.bukkitmessaging.api.redis.RedisMessagingAdapter;
-import me.rochblondiaux.bukkitmessaging.velocity.adapter.VelocityMessagingAdapter;
-import me.rochblondiaux.bukkitmessaging.velocity.listener.MessageListener;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
+
+import me.rochblondiaux.bukkitmessaging.api.Constants;
+import me.rochblondiaux.bukkitmessaging.api.MessagingService;
+import me.rochblondiaux.bukkitmessaging.api.adapter.MessagingAdapter;
+import me.rochblondiaux.bukkitmessaging.api.redis.RedisCredentials;
+import me.rochblondiaux.bukkitmessaging.api.redis.RedisMessagingAdapter;
+import me.rochblondiaux.bukkitmessaging.velocity.adapter.VelocityMessagingAdapter;
 
 /**
  * BukkitMessaging
@@ -29,7 +29,6 @@ public class VelocityMessagingService extends MessagingService {
     private final Object plugin;
     private final ProxyServer server;
     private final MessagingAdapter adapter;
-    private MessageListener listener;
     private final Queue<CachedMessage> cachedMessages = new ConcurrentLinkedQueue<>();
 
     public VelocityMessagingService(Object plugin, @NotNull ProxyServer server, @NotNull Type type, @Nullable RedisCredentials credentials) {
@@ -47,12 +46,10 @@ public class VelocityMessagingService extends MessagingService {
     public void load() {
         this.server.getChannelRegistrar().register(CHANNEL);
         this.adapter().init(this.credentials);
-        this.server.getEventManager().register(plugin, listener = new MessageListener(this));
     }
 
     public void unload() {
         this.adapter().unload();
-        this.server.getEventManager().unregisterListener(plugin, listener);
         this.server.getChannelRegistrar().unregister(CHANNEL);
     }
 

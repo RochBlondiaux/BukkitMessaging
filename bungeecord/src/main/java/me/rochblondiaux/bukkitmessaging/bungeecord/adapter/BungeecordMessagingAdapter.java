@@ -1,16 +1,21 @@
 package me.rochblondiaux.bukkitmessaging.bungeecord.adapter;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.Optional;
+import java.util.Set;
+
+import org.jetbrains.annotations.Nullable;
+
+import lombok.Getter;
 import me.rochblondiaux.bukkitmessaging.api.Constants;
 import me.rochblondiaux.bukkitmessaging.api.adapter.MessagingAdapter;
+import me.rochblondiaux.bukkitmessaging.api.cache.CacheService;
 import me.rochblondiaux.bukkitmessaging.api.redis.RedisCredentials;
 import me.rochblondiaux.bukkitmessaging.bungeecord.BungeecordMessagingService;
 import me.rochblondiaux.bukkitmessaging.bungeecord.listener.MessageListener;
 import net.md_5.bungee.api.ProxyServer;
-import org.jetbrains.annotations.Nullable;
-
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 
 /**
  * BukkitMessaging
@@ -23,10 +28,13 @@ public class BungeecordMessagingAdapter implements MessagingAdapter {
 
     private final BungeecordMessagingService service;
     private final MessageListener listener;
+    @Getter
+    private final CacheService cacheService;
 
     public BungeecordMessagingAdapter(BungeecordMessagingService service) {
         this.service = service;
         this.listener = new MessageListener(service);
+        this.cacheService = new CacheService(bytes -> ProxyServer.getInstance().getServers().values().forEach(server -> server.sendData(Constants.SUB_CHANNEL, bytes.getBytes())));
     }
 
     @Override
@@ -53,5 +61,35 @@ public class BungeecordMessagingAdapter implements MessagingAdapter {
         } catch (IOException ex) {
             service.plugin().getLogger().severe("An error occurred when attempting to communicate with proxied server! Code: M-0001");
         }
+    }
+
+    @Override
+    public void set(String key, String value) {
+        this.cacheService.set(key, value);
+    }
+
+    @Override
+    public void set(String key, String value, int ttl) {
+        this.cacheService.set(key, value, ttl);
+    }
+
+    @Override
+    public <T> Optional<T> get(String key) {
+        return this.cacheService.get(key);
+    }
+
+    @Override
+    public void remove(String key) {
+        this.cacheService.remove(key);
+    }
+
+    @Override
+    public boolean has(String key) {
+        return this.cacheService.has(key);
+    }
+
+    @Override
+    public Set<String> keys(String pattern) {
+        return this.cacheService.keys(pattern);
     }
 }

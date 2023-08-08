@@ -10,4 +10,5 @@ public class Constants {
 
     public static final String CHANNEL = "playerpoof:main";
     public static final String SUB_CHANNEL = "playerpoof";
+    public static final String CACHE_SUB_CHANNEL = "cache";
 }

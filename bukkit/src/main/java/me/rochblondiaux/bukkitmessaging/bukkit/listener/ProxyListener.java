@@ -1,17 +1,17 @@
 package me.rochblondiaux.bukkitmessaging.bukkit.listener;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteStreams;
-import lombok.RequiredArgsConstructor;
-import me.rochblondiaux.bukkitmessaging.api.Constants;
-import me.rochblondiaux.bukkitmessaging.bukkit.adapter.BukkitMessagingAdapter;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
+import lombok.RequiredArgsConstructor;
+import me.rochblondiaux.bukkitmessaging.api.Constants;
+import me.rochblondiaux.bukkitmessaging.api.cache.CacheService;
+import me.rochblondiaux.bukkitmessaging.bukkit.adapter.BukkitMessagingAdapter;
 
 /**
  * BukkitMessaging
@@ -23,6 +23,7 @@ import java.io.IOException;
 public class ProxyListener implements PluginMessageListener {
 
     private final BukkitMessagingAdapter adapter;
+    private final CacheService cacheService;
 
     @Override
     public void onPluginMessageReceived(@NotNull String channel, @NotNull Player player, byte @NotNull [] message) {
@@ -32,8 +33,11 @@ public class ProxyListener implements PluginMessageListener {
         DataInputStream in = new DataInputStream(stream);
 
         try {
-            String subchannel = in.readUTF();
-            if (!subchannel.equals(Constants.SUB_CHANNEL))
+            String subChannel = in.readUTF();
+            if (subChannel.equalsIgnoreCase(Constants.CACHE_SUB_CHANNEL)) {
+                cacheService.handleMessage(in.readUTF());
+                return;
+            } else if (!subChannel.equals(Constants.SUB_CHANNEL))
                 return;
             String data = in.readUTF();
             adapter.service().pipeline().read(data);

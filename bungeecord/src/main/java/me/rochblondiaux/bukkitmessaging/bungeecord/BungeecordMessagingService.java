@@ -1,5 +1,8 @@
 package me.rochblondiaux.bukkitmessaging.bungeecord;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import me.rochblondiaux.bukkitmessaging.api.Constants;
 import me.rochblondiaux.bukkitmessaging.api.MessagingService;
 import me.rochblondiaux.bukkitmessaging.api.adapter.MessagingAdapter;
@@ -8,8 +11,6 @@ import me.rochblondiaux.bukkitmessaging.api.redis.RedisMessagingAdapter;
 import me.rochblondiaux.bukkitmessaging.bungeecord.adapter.BungeecordMessagingAdapter;
 import me.rochblondiaux.bukkitmessaging.bungeecord.listener.MessageListener;
 import net.md_5.bungee.api.plugin.Plugin;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * BukkitMessaging
@@ -38,6 +39,7 @@ public class BungeecordMessagingService extends MessagingService {
     public void unload() {
         this.adapter().unload();
         this.plugin.getProxy().getPluginManager().unregisterListener(listener);
+        this.plugin.getProxy().unregisterChannel(Constants.SUB_CHANNEL);
     }
 
     @Override

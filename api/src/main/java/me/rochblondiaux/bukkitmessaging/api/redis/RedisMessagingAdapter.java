@@ -1,16 +1,20 @@
 package me.rochblondiaux.bukkitmessaging.api.redis;
 
+import java.time.Duration;
+import java.util.Optional;
+import java.util.Set;
+
+import org.jetbrains.annotations.Nullable;
+
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.rochblondiaux.bukkitmessaging.api.MessagingService;
 import me.rochblondiaux.bukkitmessaging.api.adapter.MessagingAdapter;
-import org.jetbrains.annotations.Nullable;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisPubSub;
 import redis.clients.jedis.exceptions.JedisConnectionException;
-
-import java.time.Duration;
 
 /**
  * BukkitMessaging
@@ -22,6 +26,7 @@ import java.time.Duration;
 public class RedisMessagingAdapter implements MessagingAdapter {
 
     private final MessagingService service;
+    @Getter
     private JedisPool pool;
     private Thread thread;
     private RedisListener listener;
@@ -79,6 +84,48 @@ public class RedisMessagingAdapter implements MessagingAdapter {
 
         try (final Jedis jedis = this.pool.getResource()) {
             jedis.publish("bukkit-messaging", message);
+        }
+    }
+
+    @Override
+    public void set(String key, String value) {
+        try (final Jedis jedis = this.pool.getResource()) {
+            jedis.set(key, value);
+        }
+    }
+
+    @Override
+    public void set(String key, String value, int ttl) {
+        try (final Jedis jedis = this.pool.getResource()) {
+            jedis.setex(key, ttl, value);
+        }
+    }
+
+    @Override
+    public <T> Optional<T> get(String key) {
+        try (final Jedis jedis = this.pool.getResource()) {
+            return Optional.ofNullable((T) jedis.get(key));
+        }
+    }
+
+    @Override
+    public void remove(String key) {
+        try (final Jedis jedis = this.pool.getResource()) {
+            jedis.del(key);
+        }
+    }
+
+    @Override
+    public boolean has(String key) {
+        try (final Jedis jedis = this.pool.getResource()) {
+            return jedis.exists(key);
+        }
+    }
+
+    @Override
+    public Set<String> keys(String pattern) {
+        try (final Jedis jedis = this.pool.getResource()) {
+            return jedis.keys(pattern);
         }
     }
 

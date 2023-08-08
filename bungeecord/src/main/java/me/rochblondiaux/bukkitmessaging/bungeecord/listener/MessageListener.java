@@ -1,16 +1,17 @@
 package me.rochblondiaux.bukkitmessaging.bungeecord.listener;
 
-import lombok.RequiredArgsConstructor;
-import me.rochblondiaux.bukkitmessaging.api.Constants;
-import me.rochblondiaux.bukkitmessaging.bungeecord.BungeecordMessagingService;
-import net.md_5.bungee.api.event.PluginMessageEvent;
-import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.event.EventHandler;
-
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.logging.Level;
+
+import lombok.RequiredArgsConstructor;
+import me.rochblondiaux.bukkitmessaging.api.Constants;
+import me.rochblondiaux.bukkitmessaging.bungeecord.BungeecordMessagingService;
+import me.rochblondiaux.bukkitmessaging.bungeecord.adapter.BungeecordMessagingAdapter;
+import net.md_5.bungee.api.event.PluginMessageEvent;
+import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.event.EventHandler;
 
 /**
  * BukkitMessaging

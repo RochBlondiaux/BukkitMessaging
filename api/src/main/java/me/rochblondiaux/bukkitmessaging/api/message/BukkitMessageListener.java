@@ -3,8 +3,6 @@ package me.rochblondiaux.bukkitmessaging.api.message;
 import me.rochblondiaux.bukkitmessaging.api.ServerIdentifier;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.UUID;
-
 /**
  * BukkitMessaging
  * 23/02/2023
