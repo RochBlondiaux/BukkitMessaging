@@ -52,12 +52,18 @@ public class VelocityMessagingAdapter implements MessagingAdapter {
 
     @Override
     public void init(@Nullable RedisCredentials credentials) {
+        // Register channel
+        service.server().getChannelRegistrar().register(VelocityMessagingService.CHANNEL);
+
         // Register listener
         service.server().getEventManager().register(service.plugin(), listener);
     }
 
     @Override
     public void unload() {
+        // Unregister channel
+        service.server().getChannelRegistrar().unregister(VelocityMessagingService.CHANNEL);
+
         // Unregister listener
         service.server().getEventManager().unregisterListener(service.plugin(), listener);
     }

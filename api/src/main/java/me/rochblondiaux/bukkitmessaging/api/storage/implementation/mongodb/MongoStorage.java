@@ -6,6 +6,7 @@ import com.mongodb.*;
 import com.mongodb.client.MongoDatabase;
 
 import jdk.internal.joptsimple.internal.Strings;
+import lombok.Getter;
 import me.rochblondiaux.bukkitmessaging.api.storage.StorageCredentials;
 import me.rochblondiaux.bukkitmessaging.api.storage.StorageImplementation;
 
@@ -18,8 +19,11 @@ import me.rochblondiaux.bukkitmessaging.api.storage.StorageImplementation;
 public class MongoStorage implements StorageImplementation {
 
     private final StorageCredentials configuration;
+    @Getter
     private MongoClient mongoClient;
+    @Getter
     private MongoDatabase database;
+    @Getter
     private final String prefix;
     private final String connectionUri;
 
@@ -28,7 +32,6 @@ public class MongoStorage implements StorageImplementation {
         this.prefix = prefix;
         this.connectionUri = connectionUri;
     }
-
 
     @Override
     public String getImplementationName() {
@@ -73,5 +76,6 @@ public class MongoStorage implements StorageImplementation {
             this.mongoClient.close();
         }
     }
+
 
 }

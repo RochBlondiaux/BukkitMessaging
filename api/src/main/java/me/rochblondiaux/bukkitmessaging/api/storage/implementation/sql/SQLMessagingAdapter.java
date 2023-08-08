@@ -33,6 +33,14 @@ public class SQLMessagingAdapter implements MessagingAdapter {
 
     @Override
     public void init(@Nullable RedisCredentials credentials) {
+        // Init storage
+        try {
+            this.storage.init();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        // Init tables
         try (Connection c = this.storage.getConnection()) {
             // init messages table
             String createStatement = "CREATE TABLE IF NOT EXISTS `" + messagesTable + "` (`id` INT AUTO_INCREMENT NOT NULL, `time` TIMESTAMP NOT NULL, `msg` TEXT NOT NULL, PRIMARY KEY (`id`)) DEFAULT CHARSET = utf8mb4";
@@ -79,6 +87,10 @@ public class SQLMessagingAdapter implements MessagingAdapter {
 
     @Override
     public void unload() {
+        // close storage
+        this.storage.shutdown();
+
+        // Lock
         this.lock.writeLock().lock();
         try {
             this.closed = true;
@@ -236,7 +248,7 @@ public class SQLMessagingAdapter implements MessagingAdapter {
                         Timestamp createdAt = rs.getTimestamp("created_at");
 
                         if (ttl > 0) {
-                            if (createdAt.getTime() + (ttl * 1000) < System.currentTimeMillis()) {
+                            if (createdAt.getTime() + (ttl * 1000L) < System.currentTimeMillis()) {
                                 // expired
                                 return false;
                             }

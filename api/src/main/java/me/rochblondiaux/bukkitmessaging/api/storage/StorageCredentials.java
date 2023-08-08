@@ -1,9 +1,12 @@
 package me.rochblondiaux.bukkitmessaging.api.storage;
 
-import java.util.Map;
 import java.util.Objects;
 
+import com.google.gson.annotations.SerializedName;
+
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * BukkitMessaging
@@ -11,37 +14,24 @@ import lombok.Getter;
  *
  * @author Roch Blondiaux (Kiwix).
  */
+@Getter
+@NoArgsConstructor
+@Setter
 public class StorageCredentials {
 
-    private final String address;
-    private final String database;
-    private final String username;
-    private final String password;
+    @SerializedName("type")
+    private StorageType type;
+    @SerializedName("host")
+    private String address;
+    @SerializedName("database")
+    private String database;
+    @SerializedName("username")
+    private String username;
+    @SerializedName("password")
+    private String password;
+    @SerializedName("pool-settings")
     @Getter
-    private final int maxPoolSize;
-    @Getter
-    private final int minIdleConnections;
-    @Getter
-    private final int maxLifetime;
-    @Getter
-    private final int keepAliveTime;
-    @Getter
-    private final int connectionTimeout;
-    @Getter
-    private final Map<String, String> properties;
-
-    public StorageCredentials(String address, String database, String username, String password, int maxPoolSize, int minIdleConnections, int maxLifetime, int keepAliveTime, int connectionTimeout, Map<String, String> properties) {
-        this.address = address;
-        this.database = database;
-        this.username = username;
-        this.password = password;
-        this.maxPoolSize = maxPoolSize;
-        this.minIdleConnections = minIdleConnections;
-        this.maxLifetime = maxLifetime;
-        this.keepAliveTime = keepAliveTime;
-        this.connectionTimeout = connectionTimeout;
-        this.properties = properties;
-    }
+    private StoragePoolSettings poolSettings;
 
     public String getAddress() {
         return Objects.requireNonNull(this.address, "address");

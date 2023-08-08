@@ -3,12 +3,15 @@ package me.rochblondiaux.bukkitmessaging.api.storage;
 import java.util.Arrays;
 import java.util.List;
 
+import lombok.Getter;
+
 /**
  * BukkitMessaging
  * 08/08/2023
  *
  * @author Roch Blondiaux (Kiwix).
  */
+@Getter
 public enum StorageType {
     MONGODB("MongoDB", "mongodb"),
     MARIADB("MariaDB", "mariadb"),
@@ -35,11 +38,4 @@ public enum StorageType {
         return def;
     }
 
-    public String getName() {
-        return this.name;
-    }
-
-    public List<String> getIdentifiers() {
-        return this.identifiers;
-    }
 }

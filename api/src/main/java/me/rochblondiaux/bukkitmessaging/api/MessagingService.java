@@ -1,14 +1,16 @@
 package me.rochblondiaux.bukkitmessaging.api;
 
+import java.util.*;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import me.rochblondiaux.bukkitmessaging.api.adapter.MessagingAdapter;
 import me.rochblondiaux.bukkitmessaging.api.message.BukkitMessage;
 import me.rochblondiaux.bukkitmessaging.api.message.BukkitMessageListener;
 import me.rochblondiaux.bukkitmessaging.api.pipeline.MessagingPipeline;
 import me.rochblondiaux.bukkitmessaging.api.redis.RedisCredentials;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.*;
+import me.rochblondiaux.bukkitmessaging.api.storage.StorageCredentials;
 
 /**
  * BukkitMessaging
@@ -21,13 +23,15 @@ public abstract class MessagingService {
     protected final ServerIdentifier identifier;
     protected final Type type;
     protected final RedisCredentials credentials;
+    protected final StorageCredentials storageCredentials;
     protected final Map<Class<? extends BukkitMessage>, List<BukkitMessageListener>> listeners;
     protected final MessagingPipeline pipeline;
 
-    public MessagingService(@NotNull String name, @NotNull Type type, @Nullable RedisCredentials credentials) {
+    public MessagingService(@NotNull String name, @NotNull Type type, @Nullable RedisCredentials credentials, @Nullable StorageCredentials storageCredentials) {
         this.identifier = new ServerIdentifier(UUID.randomUUID(), name);
         this.type = type;
         this.credentials = credentials;
+        this.storageCredentials = storageCredentials;
         this.pipeline = new MessagingPipeline(this);
         this.listeners = new HashMap<>();
     }
@@ -68,6 +72,8 @@ public abstract class MessagingService {
 
     public enum Type {
         PROXY,
-        REDIS
+        REDIS,
+        DATABASE,
+        CLOUD
     }
 }

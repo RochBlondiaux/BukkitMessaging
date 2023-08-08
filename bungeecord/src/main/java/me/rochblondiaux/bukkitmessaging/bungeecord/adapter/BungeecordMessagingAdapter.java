@@ -39,12 +39,18 @@ public class BungeecordMessagingAdapter implements MessagingAdapter {
 
     @Override
     public void init(@Nullable RedisCredentials credentials) {
+        // Register channel
+        service.plugin().getProxy().registerChannel(Constants.SUB_CHANNEL);
+
         // Register listener
         service.plugin().getProxy().getPluginManager().registerListener(service.plugin(), listener);
     }
 
     @Override
     public void unload() {
+        // Unregister channel
+        service.plugin().getProxy().unregisterChannel(Constants.SUB_CHANNEL);
+
         // Unregister listener
         service.plugin().getProxy().getPluginManager().unregisterListener(listener);
     }

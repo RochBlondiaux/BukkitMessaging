@@ -104,7 +104,7 @@ public abstract class HikariConnectionFactory implements ConnectionFactory {
         }
 
         // get the extra connection properties from the config
-        Map<String, Object> properties = new HashMap<>(this.configuration.getProperties());
+        Map<String, Object> properties = new HashMap<>(this.configuration.getPoolSettings().getProperties());
 
         // allow the implementation to override/make changes to these properties
         overrideProperties(properties);
@@ -113,11 +113,11 @@ public abstract class HikariConnectionFactory implements ConnectionFactory {
         setProperties(config, properties);
 
         // configure the connection pool
-        config.setMaximumPoolSize(this.configuration.getMaxPoolSize());
-        config.setMinimumIdle(this.configuration.getMinIdleConnections());
-        config.setMaxLifetime(this.configuration.getMaxLifetime());
-        config.setKeepaliveTime(this.configuration.getKeepAliveTime());
-        config.setConnectionTimeout(this.configuration.getConnectionTimeout());
+        config.setMaximumPoolSize(this.configuration.getPoolSettings().getMaxPoolSize());
+        config.setMinimumIdle(this.configuration.getPoolSettings().getMinIdleConnections());
+        config.setMaxLifetime(this.configuration.getPoolSettings().getMaxLifetime());
+        config.setKeepaliveTime(this.configuration.getPoolSettings().getKeepAliveTime());
+        config.setConnectionTimeout(this.configuration.getPoolSettings().getConnectionTimeout());
 
         // don't perform any initial connection validation - we subsequently call #getConnection
         // to setup the schema anyways
